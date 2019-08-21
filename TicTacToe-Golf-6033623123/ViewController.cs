@@ -7,13 +7,20 @@ namespace TicTacToeGolf6033623123
 {
     public partial class ViewController : NSViewController
     {
+
+        //game logic variables
+
         static Boolean isRunning = true;
 
         static string winner = null;
 
         static Boolean turn = true; //true binds to O false binds to X
 
-        static string[] Board= { " ", " ", " ", " ", " ", " ", " ", " ", " " };
+        static int moveCount = 0;
+
+        static string[] Board = { " ", " ", " ", " ", " ", " ", " ", " ", " " };
+
+        //viewController parts
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -30,20 +37,22 @@ namespace TicTacToeGolf6033623123
         public override NSObject RepresentedObject
         {
             get
-            { 
+            {
                 return base.RepresentedObject;
             }
             set
             {
                 base.RepresentedObject = value;
                 // Update the view, if already loaded.
-               
+
             }
         }
 
+        //gui binding part
+
         partial void onClickButton1(AppKit.NSButton sender)
         {
-            Boolean success=mark(0);
+            Boolean success = mark(0);
 
             Console.WriteLine(success);
 
@@ -229,6 +238,7 @@ namespace TicTacToeGolf6033623123
             isRunning = true;
             winner = null;
             turn = true;
+            moveCount = 0;
 
             button1Prop.Enabled = true;
             button2Prop.Enabled = true;
@@ -241,8 +251,11 @@ namespace TicTacToeGolf6033623123
             button9Prop.Enabled = true;
 
             updateState();
-            
+
         }
+
+
+        //logic part start here
 
         private string getCurrentTurn()
         {
@@ -255,9 +268,10 @@ namespace TicTacToeGolf6033623123
 
         private Boolean mark(int i)
         {
-            if(Board[i]==" ")
+            if (Board[i] == " ") //only marks when square board is empty
             {
                 Board[i] = getCurrentTurn();
+                moveCount++;
                 return true;
             }
             else
@@ -266,15 +280,22 @@ namespace TicTacToeGolf6033623123
             }
         }
 
-        private void updateState()
+        private void displayboard() //bind button status (X,O) to boards variable
         {
-            displayboard();
-            displayMessage();
+            button1Prop.Title = Board[0];
+            button2Prop.Title = Board[1];
+            button3Prop.Title = Board[2];
+            button4Prop.Title = Board[3];
+            button5Prop.Title = Board[4];
+            button6Prop.Title = Board[5];
+            button7Prop.Title = Board[6];
+            button8Prop.Title = Board[7];
+            button9Prop.Title = Board[8];
         }
 
-        private void displayMessage()
+        private void displayMessage() //display game status message
         {
-            if(isRunning)
+            if (isRunning)
             {
                 if (turn)
                 {
@@ -289,27 +310,50 @@ namespace TicTacToeGolf6033623123
             {
                 if (winner == null)
                 {
-                    mainLabel.StringValue = "Tie";
+                    mainLabel.StringValue = "Tie.";
                 }
                 else
                 {
-                    mainLabel.StringValue = (" "+"is a Winner");
+                    mainLabel.StringValue = (winner + " wins.");
                 }
             }
-            
+
         }
 
-        private void displayboard()
+        private void evaluateGame() //evaluate game stats (check for winner)
         {
-            button1Prop.Title = Board[0];
-            button2Prop.Title = Board[1];
-            button3Prop.Title = Board[2];
-            button4Prop.Title = Board[3];
-            button5Prop.Title = Board[4];
-            button6Prop.Title = Board[5];
-            button7Prop.Title = Board[6];
-            button8Prop.Title = Board[7];
-            button9Prop.Title = Board[8];
+            //all winning combinations
+            int[][] winningCombinations = { new int[] { 0, 1, 2 }, new int[] { 3, 4, 5 }, new int[] { 6, 7, 8 }, new int[] { 0, 3, 6 }, new int[] { 1, 4, 7 }, new int[] { 2, 5, 8 }, new int[] { 0, 4, 8 }, new int[] { 2, 4, 6 } };
+            for (int i = 0; i < 8; i++)
+            {
+                int[] wc = winningCombinations[i];
+                int firstElement = wc[0];
+                int secondElement = wc[1];
+                int thirdElement = wc[2];
+
+                if (Board[firstElement] != " " && Board[firstElement] == Board[secondElement] && Board[firstElement] == Board[thirdElement])
+                {
+                    isRunning = false;
+                    winner = Board[firstElement];
+                }
+
+
+            }
+            //check tie condition
+            Console.WriteLine(moveCount);
+            if(moveCount==9)
+            {
+                isRunning = false;
+            }
+
+
+        }
+
+        private void updateState() //update game states
+        {
+            evaluateGame();
+            displayboard();
+            displayMessage();
         }
     }
 }

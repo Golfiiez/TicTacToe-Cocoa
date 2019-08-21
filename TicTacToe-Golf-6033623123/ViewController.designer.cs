@@ -48,9 +48,6 @@ namespace TicTacToeGolf6033623123
 		[Action ("onClickButton2:")]
 		partial void onClickButton2 (AppKit.NSButton sender);
 
-		[Action ("onCLickButton2:")]
-		partial void onCLickButton2 (Foundation.NSObject sender);
-
 		[Action ("onClickButton3:")]
 		partial void onClickButton3 (AppKit.NSButton sender);
 
