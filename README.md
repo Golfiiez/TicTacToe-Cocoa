@@ -3,7 +3,7 @@ This is a simple TicTacToe macOS GUI cocoa c# project on visual-studio 2019
 
 ## Installation
 
-don't forget to install dependencies from visual-studio
+Open this .sln (visual studio solution) and open view controller on visual studio.
 
 ## Usage
 
